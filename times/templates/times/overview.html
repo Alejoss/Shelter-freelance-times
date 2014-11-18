@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block extra_staticfiles %}
+{% endblock extra_staticfiles %}
+
+{% block sidebar %}
+<div class="collapse navbar-collapse navbar-ex1-collapse">
+    <ul class="nav navbar-nav side-nav">
+        <li>
+            <a href=""><i class="fa fa-fw fa-dashboard"></i> Today</a>
+        </li>
+        <li>
+            <a href=""><i class="fa fa-fw fa-bar-chart-o active"></i> Overview</a>
+        </li>
+        <li>
+            <a href=""><i class="fa fa-fw fa-table"></i> Activities</a>
+        <li>
+            <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i> Dropdown <i class="fa fa-fw fa-caret-down"></i></a>
+            <ul id="demo" class="collapse">
+                <li>
+                    <a href="#">Dropdown Item</a>
+                </li>
+                <li>
+                    <a href="#">Dropdown Item</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+{% endblock sidebar %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">
+            Overview
+            <small id ="subtl-header">This month's times/day</small>
+        </h1>
+        <button class = "btn btn-success" id="activate_timesday"> times/day </button>
+        <button class = "btn btn-success" id="activate_timesweek"> times/week </button>
+
+        <div id = "times_day">
+
+        </div>
+        
+        <div id = "times_week">
+
+        </div>
+        
+    </div>
+</div>
+<!-- /.row -->
+{% endblock content %}
+
+{% block extra_javascript %}
+<script src="{% static 'js/overview.js' %}"></script>
+{% endblock extra_javascript %}
