@@ -2,8 +2,16 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
-from times.models import Day, Week
+from times.models import Day, Week, Records, ExtraMinutes
 from activities.models import TrophySet, Activity
+
+
+class ExtraMinutesSerializer(serializers.ModelSerializer):
+	owner = serializers.Field(source='owner.username')
+
+	class Meta:
+		model = ExtraMinutes
+		fields =  ('activity', 'operation', 'minutes', 'owner')
 
 
 class WeekSerializer(serializers.ModelSerializer):
@@ -40,6 +48,26 @@ class DaySerializer(serializers.ModelSerializer):
 			return instance
 
 		return Day(**attrs)
+
+
+class RecordSerializer(serializers.ModelSerializer):
+	activity = serializers.CharField(source='activity.title', read_only=True)
+	time_start = serializers.CharField(source='string_time_start', read_only=True)
+	time_end = serializers.CharField(source='string_time_end', read_only=True)
+	image = serializers.CharField(source='activity.image', read_only=True)
+
+	class Meta:
+		model = Records
+		fields = ("activity", "time_start", "time_end", "image")
+
+
+class StartRecordSerializer(serializers.ModelSerializer):
+	activity = serializers.PrimaryKeyRelatedField()
+	id = serializers.Field()
+
+	class Meta:
+		model = Records
+		fields = ("activity", "id")
 
 
 class UserSerializer(serializers.ModelSerializer):

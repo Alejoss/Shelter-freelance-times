@@ -1,4 +1,3 @@
-
 /* Models */
 DayModel = Backbone.Model.extend({
 });

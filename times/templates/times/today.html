@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
-{% block extra_staticfiles %}
+{% block extra_css %}
 <link href="{% static 'css/todo_today.css' %}" rel="stylesheet">
-<link href="{% static 'css/today.css' %}" rel="stylesheet">    
-{% endblock extra_staticfiles %}
+<link href="{% static 'css/today.css' %}" rel="stylesheet">
+<link href="{% static 'css/bootstrap-select.css' %}" rel="stylesheet">    
+{% endblock extra_css %}
 
 {% block sidebar %}
 <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -42,68 +43,61 @@
         <hr>
         <div class = "row">
             <div class="btn-group btn-group" role="group">
-                <button type="button" class="btn btn-info">Shelter</button>
-                <button type="button" class="btn btn-info active">OL 1.2</button>
-                <button type="button" class="btn btn-info">OL Contenido</button>
+                {% for activity in activities %}
+                <button type="button" class="btn btn-info act_btn" data-id="{{activity.id}}">{{activity.title}}</button>
+                {% endfor %}
             </div>
             
-            <div class ="btn-group">
-                <button type="button" class ="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                Other <span class="caret"></span>
-                </button>
-                <ul class ="dropdown-menu" role="menu">
-                    <li><a href="">Linux-Sistemas</a></li>
-                    <li><a href="">Github CodeSchool</a></li>
-                </ul>
-            </div>
         </div>
         <div class ="row">
-            <div class="thumbnail thumb_act">
+            <div id = "act_panel" class="thumbnail thumb_act">
+                {% if last_record.is_running %}
                 <div class = "caption">
-                    <h3 class = "pull-left"> Linux - 10:30am </h3>
-                    <p><a href="" class ="btn btn-danger pull-right"> Stop </a></p>
+                    <button id="act_stop" class ="btn btn-danger pull-right"> Stop </button>
+                    <h3 id="actually_running" data-id = "{{activity.id}}"> Linux </h3>
+                    <h4> <small> Since 10:30am </small> </h4>
                 </div>
                 <img class = "image_act" src="http://static.betazeta.com/www.fayerwayer.com/up/2013/09/tux-linux.png"></img>
+                {% else %}
+                    <img src="http://images.acgon.com/Uploadfile/Products/mp0010/mp0010.jpg">
+                {% endif %}
             </div>
         </div>
         <div class = "row">
-            <p> <strong> + / - </strong> </p>
-            <div class = "row">
-                <div class = "col-md-4">
-                    <div class = "input-group">
-                        <span class = "input-group-addon">+</span>
-                        <input type="text" class="form-control" placeholder="minutes">
-                    </div>
-                    <br>
-                </div>
-            <div class = "col-md-4">
-                <div class = "input-group">
-                    <span class = "input-group-addon"> - </span>
-                    <input type="text" class="form-control" placeholder="minutes">
+            <div class = "col-md-6">
+                <div class = "input-group form_controls_add">
+                    <span class = "input-group-addon">+/-</span>
+                    <input id = "formAdd_minutes" type="text" class="form-control" placeholder="minutes">
                 </div>
             </div>
-            </div> <!--row -->
-            <div class = "row">
-            <div class = "col-md-4">
-                <div class = "input-group">
-                    <span class = "input-group-addon"> - </span>
-                    <input type="text" class="form-control" placeholder="minutes">
+            <div class = "col-md-12">
+                <div id ="formAdd_operation" class = "btn-group form_controls_add" role="group">
+                    <button type="button" class ="btn btn-default">+</button>
+                    <button type="button" class ="btn btn-default">-</button>
                 </div>
             </div>
-            <div class = "col-md-4">
-                <div class = "input-group">
-                    <span class = "input-group-addon"> - </span>
-                    <input type="text" class="form-control" placeholder="minutes">
-                </div>
+            <div class = "col-md-12">
+                <select id ="formAdd_act" class ="selectpicker form_controls_add">
+                    <option>Ol Contenido</option>
+                    <option>Freelance Web</option>
+                </select>
             </div>
+            <div class = "col-md-12">
+              <button id ="formAdd_send" class = "btn btn-warning form_controls_add">
+                Send
+              </button>  
             </div>
         </div>
         <div class = "row">
+        <hr>
             <ul class ="list-group">
-                <li class="list-group-item list-group-item-info">Shelter from 10:30am to 11:30am 
-                    <span class = "badge">60</span>
-                </li>
-                <li class="list-group-item list-group-item-success">+ 40 min - Linux-Sistemas<span class = "badge">40</span></li>
+                {% for record in today_records %}
+                <li class="list-group-item list-group-item-info"> {{record.activity.title}} from {{record.time_start|date:"P"}} to {{record.time_end|date:"P"}}
+                    <span class = "badge">{{record.total_time}} </span>
+                </li>    
+                {% endfor %}                
+                <li class="list-group-item list-group-item-success">+ 40 min - Linux-Sistemas
+                <span class = "badge">40</span></li>
                 <li class="list-group-item list-group-item-danger">- 30 min - Github<span class = "badge">30</span></li>
             </ul>
         </div>
@@ -158,4 +152,14 @@
 {% endblock content %}
 
 {% block extra_javascript %}
+<script src="{% static 'js/bootstrap-select.js' %}"></script>
+<script src="{% static 'js/today.js' %}"></script>
 {% endblock extra_javascript %}
+
+<script>
+$(".selectpicker").selectpicker({
+    style: 'btn-info',
+    size: 3
+});
+</script>
+
